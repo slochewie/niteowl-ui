@@ -6,6 +6,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./navigation": "./src/navigation/index.ts",
+    "./organization": "./src/organization/index.ts",
     "./shell": "./src/shell/index.ts"
   },
   "peerDependencies": {
