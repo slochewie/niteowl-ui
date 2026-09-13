@@ -11,3 +11,8 @@ export type NiteOwlOrganizationSelection = {
   selectedOrganizationId?: string | null;
   onSelectOrganization?: (organizationId: string) => void;
 };
+
+export {
+  OrganizationSelector,
+  type OrganizationSelectorProps,
+} from "./organization-selector.tsx";
