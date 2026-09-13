@@ -12,7 +12,9 @@ export type OrganizationSelectorProps = {
   placeholder?: string;
   loading?: boolean;
   disabled?: boolean;
+  variant?: "card" | "compact";
   className?: string;
+  selectClassName?: string;
 };
 
 export function OrganizationSelector({
@@ -24,7 +26,9 @@ export function OrganizationSelector({
   placeholder = "Select organization",
   loading = false,
   disabled = false,
+  variant = "card",
   className,
+  selectClassName,
 }: OrganizationSelectorProps) {
   const isDisabled = disabled || loading || organizations.length === 0;
   const selectValue = value ?? "";
@@ -38,6 +42,42 @@ export function OrganizationSelector({
     if (event.target.value) {
       onValueChange(event.target.value);
     }
+  }
+
+  const select = (
+    <div className={variant === "compact" ? className : undefined}>
+      <div className="relative">
+        <select
+          aria-label={title}
+          value={selectValue}
+          disabled={isDisabled}
+          onChange={handleChange}
+          className={[
+            "flex h-9 w-full appearance-none rounded-md border border-input bg-transparent px-3 py-1 pr-9 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50",
+            selectClassName,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <option value="" disabled>
+            {emptyLabel}
+          </option>
+          {organizations.map((organization) => (
+            <option key={organization.id} value={organization.id}>
+              {organization.name}
+            </option>
+          ))}
+        </select>
+        <ChevronDownIcon
+          className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+  );
+
+  if (variant === "compact") {
+    return select;
   }
 
   return (
@@ -59,30 +99,7 @@ export function OrganizationSelector({
         ) : null}
       </div>
 
-      <div className="p-6 pt-0">
-        <div className="relative">
-          <select
-            aria-label={title}
-            value={selectValue}
-            disabled={isDisabled}
-            onChange={handleChange}
-            className="flex h-9 w-full appearance-none rounded-md border border-input bg-transparent px-3 py-1 pr-9 text-sm shadow-xs outline-none transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <option value="" disabled>
-              {emptyLabel}
-            </option>
-            {organizations.map((organization) => (
-              <option key={organization.id} value={organization.id}>
-                {organization.name}
-              </option>
-            ))}
-          </select>
-          <ChevronDownIcon
-            className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden="true"
-          />
-        </div>
-      </div>
+      <div className="p-6 pt-0">{select}</div>
     </section>
   );
 }
