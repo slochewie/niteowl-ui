@@ -1,7 +1,7 @@
 import { Building2Icon, ChevronDownIcon } from "lucide-react";
 import type { ChangeEvent } from "react";
 
-import type { NiteOwlOrganization } from "./index.ts";
+import type { NiteOwlOrganization } from "./types.ts";
 
 export type OrganizationSelectorProps = {
   organizations: NiteOwlOrganization[];
