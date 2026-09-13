@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { NavigationModel } from "../navigation/types.ts";
+import type { NiteOwlOrganizationSelection } from "../organization/index.ts";
 
 export type NiteOwlShellUser = {
   id: string;
@@ -13,5 +14,6 @@ export type NiteOwlAppShellProps = {
   appTitle: string;
   navigation: NavigationModel;
   user: NiteOwlShellUser;
+  organizationSelection?: NiteOwlOrganizationSelection;
   children: ReactNode;
 };
