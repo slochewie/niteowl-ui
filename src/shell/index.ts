@@ -2,6 +2,9 @@ import type { ReactNode } from "react";
 import type { NavigationModel } from "../navigation/types.ts";
 import type { NiteOwlOrganizationSelection } from "../organization/index.ts";
 
+export { AppSidebarIdentity } from "./app-sidebar-identity.tsx";
+export type { AppSidebarIdentityProps } from "./app-sidebar-identity.tsx";
+
 export type NiteOwlShellUser = {
   id: string;
   name?: string | null;
