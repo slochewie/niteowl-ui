@@ -5,6 +5,7 @@ export type AppSidebarIdentityProps = {
   brand?: string;
   appName: string;
   onNavigate?: () => void;
+  onToggle?: () => void;
 };
 
 export function AppSidebarIdentity({
@@ -12,11 +13,20 @@ export function AppSidebarIdentity({
   brand = "NiteOwl.dev",
   appName,
   onNavigate,
+  onToggle,
 }: AppSidebarIdentityProps) {
   return (
     <a
       href={href}
-      onClick={onNavigate}
+      onClick={(event) => {
+        if (onToggle) {
+          event.preventDefault();
+          onToggle();
+          return;
+        }
+
+        onNavigate?.();
+      }}
       className="flex h-12 w-full min-w-0 items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none transition-[width,height,padding,color] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:size-8! group-data-[collapsible=icon]:p-0!"
     >
       <div className="flex aspect-square size-8 shrink-0 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
