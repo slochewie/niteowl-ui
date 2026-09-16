@@ -8,6 +8,7 @@ import {
   LandmarkIcon,
   LayoutDashboardIcon,
   NetworkIcon,
+  PanelsTopLeftIcon,
   ScaleIcon,
   ScrollTextIcon,
   ShieldCheckIcon,
@@ -23,43 +24,26 @@ export type NiteOwlNavigationIconProps = {
   overrides?: NavigationIconOverrides;
 };
 
-export function NiteOwlNavigationIcon({
-  icon,
-  overrides,
-}: NiteOwlNavigationIconProps) {
+export function NiteOwlNavigationIcon({ icon, overrides }: NiteOwlNavigationIconProps) {
   const override = overrides?.[icon];
   if (override !== undefined) return override;
 
   switch (icon) {
-    case "book-open":
-      return <BookOpenIcon />;
-    case "building-2":
-      return <Building2Icon />;
-    case "calendar-days":
-      return <CalendarDaysIcon />;
-    case "gauge":
-      return <GaugeIcon />;
-    case "hand-coins":
-      return <HandCoinsIcon />;
-    case "landmark":
-      return <LandmarkIcon />;
-    case "layout-dashboard":
-      return <LayoutDashboardIcon />;
-    case "network":
-      return <NetworkIcon />;
-    case "scale":
-      return <ScaleIcon />;
-    case "scroll-text":
-      return <ScrollTextIcon />;
-    case "shield-check":
-      return <ShieldCheckIcon />;
-    case "square-terminal":
-      return <SquareTerminalIcon />;
-    case "user-circle":
-      return <UserCircleIcon />;
-    case "users":
-      return <UsersIcon />;
-    default:
-      return null;
+    case "book-open": return <BookOpenIcon />;
+    case "building-2": return <Building2Icon />;
+    case "calendar-days": return <CalendarDaysIcon />;
+    case "gauge": return <GaugeIcon />;
+    case "hand-coins": return <HandCoinsIcon />;
+    case "landmark": return <LandmarkIcon />;
+    case "layout-dashboard": return <LayoutDashboardIcon />;
+    case "network": return <NetworkIcon />;
+    case "panels-top-left": return <PanelsTopLeftIcon />;
+    case "scale": return <ScaleIcon />;
+    case "scroll-text": return <ScrollTextIcon />;
+    case "shield-check": return <ShieldCheckIcon />;
+    case "square-terminal": return <SquareTerminalIcon />;
+    case "user-circle": return <UserCircleIcon />;
+    case "users": return <UsersIcon />;
+    default: return null;
   }
 }
