@@ -7,6 +7,7 @@
     ".": "./src/index.ts",
     "./navigation": "./src/navigation/index.ts",
     "./organization": "./src/organization/index.ts",
+    "./selector": "./src/selector/index.ts",
     "./shell": "./src/shell/index.ts"
   },
   "peerDependencies": {
