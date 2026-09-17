@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import {
   BookOpenIcon,
   Building2Icon,
+  CableIcon,
   CalendarDaysIcon,
   GaugeIcon,
   HandCoinsIcon,
@@ -31,6 +32,7 @@ export function NiteOwlNavigationIcon({ icon, overrides }: NiteOwlNavigationIcon
   switch (icon) {
     case "book-open": return <BookOpenIcon />;
     case "building-2": return <Building2Icon />;
+    case "cable": return <CableIcon />;
     case "calendar-days": return <CalendarDaysIcon />;
     case "gauge": return <GaugeIcon />;
     case "hand-coins": return <HandCoinsIcon />;
