@@ -1,9 +1,8 @@
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const SIDEBAR_STORAGE_KEY = "niteowl.sidebar.open";
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
-const SIDEBAR_EVENT = "niteowl:sidebar-state";
 
 function readPersistedSidebarState(defaultOpen: boolean) {
   if (typeof window === "undefined") return defaultOpen;
@@ -38,45 +37,34 @@ function persistSidebarState(open: boolean) {
 
   document.cookie =
     `${SIDEBAR_COOKIE_NAME}=${open}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; samesite=lax`;
-
-  window.dispatchEvent(new Event(SIDEBAR_EVENT));
-}
-
-function subscribe(callback: () => void) {
-  if (typeof window === "undefined") return () => {};
-
-  const handleStorage = (event: StorageEvent) => {
-    if (event.key === SIDEBAR_STORAGE_KEY) callback();
-  };
-
-  window.addEventListener(SIDEBAR_EVENT, callback);
-  window.addEventListener("storage", handleStorage);
-
-  return () => {
-    window.removeEventListener(SIDEBAR_EVENT, callback);
-    window.removeEventListener("storage", handleStorage);
-  };
 }
 
 export function useNiteOwlSidebarState(defaultOpen = true) {
-  const open = useSyncExternalStore(
-    subscribe,
-    () => readPersistedSidebarState(defaultOpen),
-    () => defaultOpen,
-  );
+  const [open, setOpenState] = useState(defaultOpen);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setOpenState(readPersistedSidebarState(defaultOpen));
+    setHydrated(true);
+  }, [defaultOpen]);
 
   const setOpen = useCallback((nextOpen: boolean) => {
     persistSidebarState(nextOpen);
+    setOpenState(nextOpen);
   }, []);
 
   const toggle = useCallback(() => {
-    persistSidebarState(!readPersistedSidebarState(defaultOpen));
-  }, [defaultOpen]);
+    setOpenState((currentOpen) => {
+      const nextOpen = !currentOpen;
+      persistSidebarState(nextOpen);
+      return nextOpen;
+    });
+  }, []);
 
   return {
     open,
     setOpen,
     toggle,
-    hydrated: typeof window !== "undefined",
+    hydrated,
   };
 }
