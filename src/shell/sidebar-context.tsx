@@ -2,7 +2,6 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -12,8 +11,8 @@ const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 
 type NiteOwlSidebarContextValue = {
+  state: "expanded" | "collapsed";
   open: boolean;
-  hydrated: boolean;
   setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
   toggleSidebar: () => void;
 };
@@ -22,50 +21,45 @@ const NiteOwlSidebarContext = createContext<NiteOwlSidebarContextValue | null>(
   null,
 );
 
-function readSidebarCookie(defaultOpen: boolean) {
-  if (typeof document === "undefined") return defaultOpen;
-
-  const sidebarState = document.cookie
-    .split("; ")
-    .find((cookie) => cookie.startsWith(`${SIDEBAR_COOKIE_NAME}=`))
-    ?.split("=")[1];
-
-  return sidebarState !== "false";
-}
-
 export function NiteOwlSidebarProvider({
   children,
   defaultOpen = true,
+  open: openProp,
+  onOpenChange: setOpenProp,
 }: {
   children: ReactNode;
   defaultOpen?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const [open, setOpenState] = useState(defaultOpen);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setOpenState(readSidebarCookie(defaultOpen));
-    setHydrated(true);
-  }, [defaultOpen]);
+  const [_open, _setOpen] = useState(defaultOpen);
+  const open = openProp ?? _open;
 
   const setOpen = useCallback(
     (value: boolean | ((open: boolean) => boolean)) => {
-      const nextOpen = typeof value === "function" ? value(open) : value;
+      const openState = typeof value === "function" ? value(open) : value;
 
-      setOpenState(nextOpen);
+      if (setOpenProp) {
+        setOpenProp(openState);
+      } else {
+        _setOpen(openState);
+      }
+
       document.cookie =
-        `${SIDEBAR_COOKIE_NAME}=${nextOpen}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+        `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
-    [open],
+    [open, setOpenProp],
   );
 
   const toggleSidebar = useCallback(() => {
     setOpen((currentOpen) => !currentOpen);
   }, [setOpen]);
 
+  const state = open ? "expanded" : "collapsed";
+
   const value = useMemo(
-    () => ({ open, hydrated, setOpen, toggleSidebar }),
-    [open, hydrated, setOpen, toggleSidebar],
+    () => ({ state, open, setOpen, toggleSidebar }),
+    [state, open, setOpen, toggleSidebar],
   );
 
   return (
