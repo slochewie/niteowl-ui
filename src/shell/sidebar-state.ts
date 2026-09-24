@@ -1,15 +1,20 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 const SIDEBAR_STORAGE_KEY = "niteowl.sidebar.open";
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+const SIDEBAR_EVENT = "niteowl:sidebar-state";
 
 function readPersistedSidebarState(defaultOpen: boolean) {
   if (typeof window === "undefined") return defaultOpen;
 
-  const stored = window.localStorage.getItem(SIDEBAR_STORAGE_KEY);
-  if (stored === "true") return true;
-  if (stored === "false") return false;
+  try {
+    const stored = window.localStorage.getItem(SIDEBAR_STORAGE_KEY);
+    if (stored === "true") return true;
+    if (stored === "false") return false;
+  } catch {
+    // Fall back to the cookie below when storage is unavailable.
+  }
 
   const cookieValue = document.cookie
     .split("; ")
@@ -25,40 +30,53 @@ function readPersistedSidebarState(defaultOpen: boolean) {
 function persistSidebarState(open: boolean) {
   if (typeof window === "undefined") return;
 
-  window.localStorage.setItem(SIDEBAR_STORAGE_KEY, String(open));
+  try {
+    window.localStorage.setItem(SIDEBAR_STORAGE_KEY, String(open));
+  } catch {
+    // Cookie persistence still works if localStorage is unavailable.
+  }
+
   document.cookie =
     `${SIDEBAR_COOKIE_NAME}=${open}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; samesite=lax`;
+
+  window.dispatchEvent(new Event(SIDEBAR_EVENT));
+}
+
+function subscribe(callback: () => void) {
+  if (typeof window === "undefined") return () => {};
+
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key === SIDEBAR_STORAGE_KEY) callback();
+  };
+
+  window.addEventListener(SIDEBAR_EVENT, callback);
+  window.addEventListener("storage", handleStorage);
+
+  return () => {
+    window.removeEventListener(SIDEBAR_EVENT, callback);
+    window.removeEventListener("storage", handleStorage);
+  };
 }
 
 export function useNiteOwlSidebarState(defaultOpen = true) {
-  const [open, setOpenState] = useState(() =>
-    readPersistedSidebarState(defaultOpen),
+  const open = useSyncExternalStore(
+    subscribe,
+    () => readPersistedSidebarState(defaultOpen),
+    () => defaultOpen,
   );
-  const [hydrated, setHydrated] = useState(typeof window !== "undefined");
-
-  useEffect(() => {
-    const persistedOpen = readPersistedSidebarState(defaultOpen);
-    setOpenState(persistedOpen);
-    setHydrated(true);
-  }, [defaultOpen]);
 
   const setOpen = useCallback((nextOpen: boolean) => {
-    setOpenState(nextOpen);
     persistSidebarState(nextOpen);
   }, []);
 
   const toggle = useCallback(() => {
-    setOpenState((currentOpen) => {
-      const nextOpen = !currentOpen;
-      persistSidebarState(nextOpen);
-      return nextOpen;
-    });
-  }, []);
+    persistSidebarState(!readPersistedSidebarState(defaultOpen));
+  }, [defaultOpen]);
 
   return {
     open,
     setOpen,
     toggle,
-    hydrated,
+    hydrated: typeof window !== "undefined",
   };
 }
