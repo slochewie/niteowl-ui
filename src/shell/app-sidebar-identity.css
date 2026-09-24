@@ -1,0 +1,80 @@
+.niteowl-app-sidebar-identity {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  height: 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+  outline: none;
+  transition:
+    width 160ms ease,
+    height 160ms ease,
+    padding 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.niteowl-app-sidebar-identity:hover {
+  background: #f3f4f6;
+}
+
+.niteowl-app-sidebar-identity:focus-visible {
+  box-shadow: 0 0 0 2px #111827;
+}
+
+.niteowl-app-sidebar-identity-icon {
+  display: inline-flex;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.55rem;
+  background: #111827;
+  color: #fff;
+}
+
+.niteowl-app-sidebar-identity-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.niteowl-app-sidebar-identity-copy {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  line-height: 1.15;
+}
+
+.niteowl-app-sidebar-identity-brand,
+.niteowl-app-sidebar-identity-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.niteowl-app-sidebar-identity-brand {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.niteowl-app-sidebar-identity-name {
+  color: #111827;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.niteowl-app-sidebar-identity[data-collapsed="true"] {
+  width: 2rem;
+  padding: 0;
+}
+
+.niteowl-app-sidebar-identity[data-collapsed="true"] .niteowl-app-sidebar-identity-copy {
+  display: none;
+}
