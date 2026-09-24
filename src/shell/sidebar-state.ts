@@ -31,11 +31,14 @@ function persistSidebarState(open: boolean) {
 }
 
 export function useNiteOwlSidebarState(defaultOpen = true) {
-  const [open, setOpenState] = useState(defaultOpen);
-  const [hydrated, setHydrated] = useState(false);
+  const [open, setOpenState] = useState(() =>
+    readPersistedSidebarState(defaultOpen),
+  );
+  const [hydrated, setHydrated] = useState(typeof window !== "undefined");
 
   useEffect(() => {
-    setOpenState(readPersistedSidebarState(defaultOpen));
+    const persistedOpen = readPersistedSidebarState(defaultOpen);
+    setOpenState(persistedOpen);
     setHydrated(true);
   }, [defaultOpen]);
 
