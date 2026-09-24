@@ -39,12 +39,10 @@ export function useNiteOwlSidebarState(defaultOpen = true) {
   }, []);
 
   const toggle = useCallback(() => {
-    setOpenState((currentOpen) => {
-      const nextOpen = !currentOpen;
-      writeSidebarCookie(nextOpen);
-      return nextOpen;
-    });
-  }, []);
+    const nextOpen = !open;
+    writeSidebarCookie(nextOpen);
+    setOpenState(nextOpen);
+  }, [open]);
 
   return {
     open,
