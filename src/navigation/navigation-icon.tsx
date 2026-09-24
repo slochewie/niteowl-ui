@@ -6,6 +6,7 @@ import {
   CalendarDaysIcon,
   GaugeIcon,
   HandCoinsIcon,
+  HistoryIcon,
   LandmarkIcon,
   LayoutDashboardIcon,
   NetworkIcon,
@@ -36,6 +37,7 @@ export function NiteOwlNavigationIcon({ icon, overrides }: NiteOwlNavigationIcon
     case "calendar-days": return <CalendarDaysIcon />;
     case "gauge": return <GaugeIcon />;
     case "hand-coins": return <HandCoinsIcon />;
+    case "history": return <HistoryIcon />;
     case "landmark": return <LandmarkIcon />;
     case "layout-dashboard": return <LayoutDashboardIcon />;
     case "network": return <NetworkIcon />;
