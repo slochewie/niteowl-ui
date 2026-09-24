@@ -14,7 +14,7 @@ const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 type NiteOwlSidebarContextValue = {
   open: boolean;
   hydrated: boolean;
-  setOpen: (open: boolean) => void;
+  setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
   toggleSidebar: () => void;
 };
 
@@ -48,11 +48,16 @@ export function NiteOwlSidebarProvider({
     setHydrated(true);
   }, [defaultOpen]);
 
-  const setOpen = useCallback((nextOpen: boolean) => {
-    setOpenState(nextOpen);
-    document.cookie =
-      `${SIDEBAR_COOKIE_NAME}=${nextOpen}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
-  }, []);
+  const setOpen = useCallback(
+    (value: boolean | ((open: boolean) => boolean)) => {
+      const nextOpen = typeof value === "function" ? value(open) : value;
+
+      setOpenState(nextOpen);
+      document.cookie =
+        `${SIDEBAR_COOKIE_NAME}=${nextOpen}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+    },
+    [open],
+  );
 
   const toggleSidebar = useCallback(() => {
     setOpen((currentOpen) => !currentOpen);
