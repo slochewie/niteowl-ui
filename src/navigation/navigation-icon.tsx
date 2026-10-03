@@ -11,6 +11,7 @@ import {
   LayoutDashboardIcon,
   NetworkIcon,
   PanelsTopLeftIcon,
+  PlugZapIcon,
   ScaleIcon,
   ScrollTextIcon,
   ShieldCheckIcon,
@@ -42,6 +43,7 @@ export function NiteOwlNavigationIcon({ icon, overrides }: NiteOwlNavigationIcon
     case "layout-dashboard": return <LayoutDashboardIcon />;
     case "network": return <NetworkIcon />;
     case "panels-top-left": return <PanelsTopLeftIcon />;
+    case "plug-zap": return <PlugZapIcon />;
     case "scale": return <ScaleIcon />;
     case "scroll-text": return <ScrollTextIcon />;
     case "shield-check": return <ShieldCheckIcon />;
